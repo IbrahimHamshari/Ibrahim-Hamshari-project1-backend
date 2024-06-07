@@ -20,7 +20,8 @@ const server = http.createServer((req, res) => {
     if (path === '/api/courses' && req.method === 'GET') {
         searchCourses(req, res, {name:searchParams.get('q'), filter: searchParams.get('filter'), order: searchParams.get('order')});
     } else if (path.startsWith('/api/courses/') && req.method === 'GET') {
-        getCourseById(req, res, path.split('/')[2]);
+        console.log(path.split('/')[3])
+        getCourseById(req, res, path.split('/')[3]);
     } else {
         res.writeHead(404, {'Content-Type': 'application/json'});
         res.end(JSON.stringify({ message: "Not Found" }));
