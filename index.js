@@ -14,6 +14,18 @@ fs.readFile('./data/topics.json', (err, data) => {
 });
 
 const server = http.createServer((req, res) => {
+
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With, content-type');
+    res.setHeader('Access-Control-Allow-Credentials', true);
+
+    if (req.method === 'OPTIONS') {
+        res.writeHead(200);
+        res.end();
+        return;
+    }
+
     const url = new URL(req.url, `http://localhost:3000`);
     const path = url.pathname;
     const searchParams = url.searchParams;
@@ -52,7 +64,8 @@ function searchCourses(req, res, query) {
         // result = result.filter(course=> course.rating >= filter);
     }
     if(order){
-        result = result.sort((a,b)=> a.rating > b.rating ? -1: a.rating == b.rating ? 0 : 1 );
+        if(order == "ratings")
+            result = result.sort((a,b)=> a.rating > b.rating ? -1: a.rating == b.rating ? 0 : 1 );
     }
     res.writeHead(200, {'Content-Type': 'application/json'});
     res.end(JSON.stringify(result));
