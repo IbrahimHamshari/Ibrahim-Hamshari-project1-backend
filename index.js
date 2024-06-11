@@ -55,7 +55,8 @@ function getCourseById(req, res, id) {
 function searchCourses(req, res, query) {
     query = query? query :{};
     const {name, filter, order} = query;
-    let result = courses;
+    console.log(query)
+    let result =  [...courses];
     if(name){
         result = result.filter(course => course.topic.toLowerCase().includes(name.toLowerCase()));
     }
@@ -67,8 +68,8 @@ function searchCourses(req, res, query) {
             result = result.sort((a,b)=> a.rating > b.rating ? -1: a.rating == b.rating ? 0 : 1 );
     }
     result.map(data=>{
-        const {category, rating, name, image, topic} = data;
-        return {category, rating, name, image, topic}
+        const {id, category, rating, name, image, topic} = data;
+        return {id, category, rating, name, image, topic}
     })
     res.writeHead(200, {'Content-Type': 'application/json'});
     res.end(JSON.stringify(result));
