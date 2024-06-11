@@ -32,7 +32,6 @@ const server = http.createServer((req, res) => {
     if (path === '/api/courses' && req.method === 'GET') {
         searchCourses(req, res, {name:searchParams.get('q'), filter: searchParams.get('filter'), order: searchParams.get('order')});
     } else if (path.startsWith('/api/courses/') && req.method === 'GET') {
-        console.log(path.split('/')[3])
         getCourseById(req, res, path.split('/')[3]);
     } else {
         res.writeHead(404, {'Content-Type': 'application/json'});
@@ -58,7 +57,7 @@ function searchCourses(req, res, query) {
     const {name, filter, order} = query;
     let result = courses;
     if(name){
-        result = result.filter(course => course.topic.toLowerCase().includes(name.toLowerCase()) || course.category.toLowerCase().includes(name.toLowerCase()));
+        result = result.filter(course => course.topic.toLowerCase().includes(name.toLowerCase()));
     }
     if(filter){
         // result = result.filter(course=> course.rating >= filter);
@@ -67,6 +66,10 @@ function searchCourses(req, res, query) {
         if(order == "ratings")
             result = result.sort((a,b)=> a.rating > b.rating ? -1: a.rating == b.rating ? 0 : 1 );
     }
+    result.map(data=>{
+        const {category, rating, name, image, topic} = data;
+        return {category, rating, name, image, topic}
+    })
     res.writeHead(200, {'Content-Type': 'application/json'});
     res.end(JSON.stringify(result));
 }
